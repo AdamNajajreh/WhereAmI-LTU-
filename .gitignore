@@ -1,0 +1,5 @@
+.claude/
+.venv/
+dataset/
+*.pdf
+.DS_Store
