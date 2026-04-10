@@ -4,3 +4,5 @@ dataset/
 *.pdf
 .DS_Store
 *.zip
+__pycache__/
+*.pyc
