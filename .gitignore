@@ -6,3 +6,5 @@ dataset/
 *.zip
 __pycache__/
 *.pyc
+exports/
+models/*_savedmodel/
