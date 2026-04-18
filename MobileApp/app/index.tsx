@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { useFonts, Poppins_700Bold, Poppins_300Light } from "@expo-google-fonts/poppins";
+import * as ImagePicker from "expo-image-picker";
 
 const RECENT_SCANS = [
   { id: "1", building: "Building 8", confidence: "97%", time: "2 min ago" },
@@ -42,7 +43,17 @@ export default function Dashboard() {
   const router = useRouter();
   const { colorScheme } = useColorScheme();
   const c = colorScheme === "dark" ? DARK : LIGHT;
-  useFonts({ Poppins_700Bold, Poppins_300Light }); // already loaded in _layout, cached
+  useFonts({ Poppins_700Bold, Poppins_300Light });
+
+  async function handleGallery() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: "images",
+      quality: 0.8,
+    });
+    if (!result.canceled) {
+      router.push({ pathname: "/scan", params: { imageUri: result.assets[0].uri } });
+    }
+  }
 
   return (
     <ScrollView className="flex-1" style={{ backgroundColor: c.bg }}>
@@ -74,7 +85,7 @@ export default function Dashboard() {
         <TouchableOpacity
           className="rounded-2xl py-5 flex-row items-center justify-center gap-3 border"
           style={{ backgroundColor: c.card, borderColor: c.border }}
-          onPress={() => router.push("/scan")}
+          onPress={handleGallery}
         >
           <Ionicons name="images-outline" size={24} color={c.accent} />
           <Text className="text-lg font-semibold" style={{ color: c.accent }}>
