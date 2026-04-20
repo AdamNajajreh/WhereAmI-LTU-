@@ -30,13 +30,17 @@ type Stage = "camera" | "loading" | "result";
 type Prediction = { building: string; confidence: number };
 
 // ─── API call ────────────────────────────────────────────────────────────────
-// TODO: replace mock with real EC2 call when backend is deployed
-// const EC2_URL = "http://YOUR_EC2_IP:8000/predict";
+// TODO: replace with EC2 public IP when deployed
+const API_URL = "http://172.20.10.2:8000/predict";
 
-async function classifyImage(_uri: string): Promise<Prediction> {
-  // Simulate network delay
-  await new Promise((r) => setTimeout(r, 1500));
-  return { building: "Building -1", confidence: 0.95 };
+async function classifyImage(uri: string): Promise<Prediction> {
+  const formData = new FormData();
+  formData.append("file", { uri, name: "photo.jpg", type: "image/jpeg" } as any);
+
+  const res = await fetch(API_URL, { method: "POST", body: formData });
+  if (!res.ok) throw new Error("Server error");
+  const json = await res.json();
+  return { building: json.building, confidence: json.confidence };
 }
 
 // ─── Screens ─────────────────────────────────────────────────────────────────

@@ -53,7 +53,7 @@ export default function About() {
             What is Campus Navigator?
           </Text>
           <Text className="text-sm leading-6" style={{ color: c.mutedText }}>
-            Campus Navigator is an AI-powered mobile app that identifies buildings at Luleå University of Technology
+            Campus Navigator is an AI-powered mobile app that identifies buildings at Lawrence Technological University
             (LTU) from a single photo. Point your camera at any supported building and the model will recognise it
             instantly.
           </Text>
@@ -66,8 +66,8 @@ export default function About() {
           </Text>
 
           {[
-            { icon: "images-outline", label: "Dataset", value: "~500 photos across 8 LTU buildings" },
-            { icon: "hardware-chip-outline", label: "Model", value: "MobileNetV2 fine-tuned with TensorFlow" },
+            { icon: "images-outline", label: "Dataset", value: "~1250 photos across 8 LTU buildings" },
+            { icon: "hardware-chip-outline", label: "Model", value: "MobileNetV2" },
             { icon: "cloud-outline", label: "Backend", value: "FastAPI served on AWS EC2" },
             { icon: "phone-portrait-outline", label: "Frontend", value: "React Native with Expo" },
           ].map(({ icon, label, value }) => (
