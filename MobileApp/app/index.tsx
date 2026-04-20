@@ -4,11 +4,13 @@ import { useRouter } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { useFonts, Poppins_700Bold, Poppins_300Light } from "@expo-google-fonts/poppins";
 import * as ImagePicker from "expo-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "expo-router";
 
-const RECENT_SCANS = [
-  { id: "1", building: "Building 8", confidence: "97%", time: "2 min ago" },
-  { id: "2", building: "Building 3", confidence: "91%", time: "Yesterday" },
-];
+type ScanEntry = { id: string; building: string; confidence: string; time: string };
+
+const HISTORY_KEY = "scan_history";
 
 // Light mode: navy blue  |  Dark mode: deep navy
 const LIGHT = {
@@ -44,6 +46,17 @@ export default function Dashboard() {
   const { colorScheme } = useColorScheme();
   const c = colorScheme === "dark" ? DARK : LIGHT;
   useFonts({ Poppins_700Bold, Poppins_300Light });
+
+  const [recentScans, setRecentScans] = useState<ScanEntry[]>([]);
+
+  // Reload history every time the dashboard comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      AsyncStorage.getItem(HISTORY_KEY).then((raw) => {
+        if (raw) setRecentScans(JSON.parse(raw));
+      });
+    }, [])
+  );
 
   async function handleGallery() {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -140,7 +153,12 @@ export default function Dashboard() {
           </Text>
 
           <View className="gap-3">
-            {RECENT_SCANS.map((scan) => (
+            {recentScans.length === 0 ? (
+            <Text className="text-sm text-center py-2" style={{ color: c.mutedText }}>
+              No scans yet — take your first photo!
+            </Text>
+          ) : null}
+          {recentScans.map((scan) => (
               <View
                 key={scan.id}
                 className="rounded-xl px-4 py-4 flex-row items-center justify-between"

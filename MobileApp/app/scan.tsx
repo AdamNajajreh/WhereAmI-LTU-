@@ -6,6 +6,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { useColorScheme } from "nativewind";
 import { useFonts, Poppins_700Bold, Poppins_300Light } from "@expo-google-fonts/poppins";
 import { useLocalSearchParams } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const HISTORY_KEY = "scan_history";
+
+async function saveToHistory(prediction: Prediction) {
+  const raw = await AsyncStorage.getItem(HISTORY_KEY);
+  const history = raw ? JSON.parse(raw) : [];
+  const entry = {
+    id:         Date.now().toString(),
+    building:   prediction.building,
+    confidence: Math.round(prediction.confidence * 100) + "%",
+    time:       new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+  };
+  const updated = [entry, ...history].slice(0, 3); // keep last 3
+  await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+}
 
 const LIGHT = {
   bg: "#f0f4ff",
@@ -163,6 +179,7 @@ export default function Scan() {
     setError(null);
     try {
       const pred = await classifyImage(uri);
+      await saveToHistory(pred);
       setPrediction(pred);
       setStage("result");
     } catch {
