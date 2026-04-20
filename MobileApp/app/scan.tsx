@@ -14,10 +14,10 @@ async function saveToHistory(prediction: Prediction) {
   const raw = await AsyncStorage.getItem(HISTORY_KEY);
   const history = raw ? JSON.parse(raw) : [];
   const entry = {
-    id:         Date.now().toString(),
-    building:   prediction.building,
+    id: Date.now().toString(),
+    building: prediction.building,
     confidence: Math.round(prediction.confidence * 100) + "%",
-    time:       new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
   };
   const updated = [entry, ...history].slice(0, 3); // keep last 3
   await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
@@ -47,13 +47,23 @@ type Prediction = { building: string; confidence: number };
 
 // ─── API call ────────────────────────────────────────────────────────────────
 // TODO: replace with EC2 public IP when deployed
-const API_URL = "http://172.20.10.2:8000/predict";
+const BASE_URL = "http://172.20.10.2:8000";
+
+async function healthCheck(): Promise<void> {
+  try {
+    const res = await fetch(`${BASE_URL}/`, { method: "GET" });
+    const json = await res.json();
+    if (!res.ok || json.status !== "ok") throw new Error();
+  } catch {
+    throw new Error("Model server is not running. Please try again later.");
+  }
+}
 
 async function classifyImage(uri: string): Promise<Prediction> {
   const formData = new FormData();
   formData.append("file", { uri, name: "photo.jpg", type: "image/jpeg" } as any);
 
-  const res = await fetch(API_URL, { method: "POST", body: formData });
+  const res = await fetch(`${BASE_URL}/predict`, { method: "POST", body: formData });
   if (!res.ok) throw new Error("Server error");
   const json = await res.json();
   return { building: json.building, confidence: json.confidence };
@@ -178,12 +188,13 @@ export default function Scan() {
     setStage("loading");
     setError(null);
     try {
+      await healthCheck();
       const pred = await classifyImage(uri);
       await saveToHistory(pred);
       setPrediction(pred);
       setStage("result");
-    } catch {
-      setError("Could not reach the server. Check your connection.");
+    } catch (e: any) {
+      setError(e.message ?? "Could not reach the server. Check your connection.");
       setStage("camera");
     }
   }

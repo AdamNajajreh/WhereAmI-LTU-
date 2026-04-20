@@ -154,11 +154,11 @@ export default function Dashboard() {
 
           <View className="gap-3">
             {recentScans.length === 0 ? (
-            <Text className="text-sm text-center py-2" style={{ color: c.mutedText }}>
-              No scans yet — take your first photo!
-            </Text>
-          ) : null}
-          {recentScans.map((scan) => (
+              <Text className="text-sm text-center py-2" style={{ color: c.mutedText }}>
+                No scans yet — take your first photo!
+              </Text>
+            ) : null}
+            {recentScans.map((scan) => (
               <View
                 key={scan.id}
                 className="rounded-xl px-4 py-4 flex-row items-center justify-between"
