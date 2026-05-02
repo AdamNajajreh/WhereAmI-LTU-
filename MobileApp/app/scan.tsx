@@ -46,8 +46,7 @@ type Stage = "camera" | "loading" | "result";
 type Prediction = { building: string; confidence: number };
 
 // ─── API call ────────────────────────────────────────────────────────────────
-// TODO: replace with EC2 public IP when deployed
-const BASE_URL = "http://172.20.10.2:8000";
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "";
 
 async function healthCheck(): Promise<void> {
   try {
