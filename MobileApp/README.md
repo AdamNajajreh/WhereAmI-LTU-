@@ -1,8 +1,21 @@
-# Welcome to your Expo app 👋
+# LTU Campus Navigator — Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+React Native (Expo) app that identifies LTU campus buildings from a photo using a MobileNetV2 model served via a FastAPI backend on AWS EC2.
 
-## Get started
+## Features
+
+- Live camera scan or gallery upload
+- AI prediction with confidence score
+- Recent scan history (last 3 results)
+- Dark / light mode
+- Health check before every prediction with a clear error message if the server is down
+
+## Prerequisites
+
+- Node.js 18+
+- Expo Go installed on your phone, or an iOS simulator via Xcode
+
+## Setup
 
 1. Install dependencies
 
@@ -10,41 +23,45 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Create your environment file
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Open `.env` and set `EXPO_PUBLIC_API_URL` to the backend server address:
+
+   ```
+   EXPO_PUBLIC_API_URL=http://<your-ec2-ip>:8000
+   ```
+
+3. Start the dev server
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+   Scan the QR code with Expo Go, or press `i` to open the iOS simulator.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Sharing with others (no build required)
 
 ```bash
-npm run reset-project
+npx expo start --tunnel
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Classmates scan the QR code with Expo Go — no Apple Developer account needed.
 
-## Learn more
+## Project structure
 
-To learn more about developing your project with Expo, look at the following resources:
+```
+app/
+  _layout.tsx   # Tab navigator + font loading
+  index.tsx     # Dashboard (scan history, quick actions)
+  scan.tsx      # Camera, loading, and result screens
+  settings.tsx  # Dark mode toggle, model info
+  about.tsx     # Project info
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Backend
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The backend is a FastAPI server running in Docker on AWS EC2. See [`../backend/`](../backend/) for the server code and Dockerfile.
