@@ -1,98 +1,95 @@
 # Campus Navigation Mobile App using Computer Vision
 
+A mobile application that identifies LTU campus buildings from a photo using a MobileNetV2 deep learning model, deployed as a REST API on AWS EC2.
+
+---
+
 ## Project Overview
 
-This project aims to develop a mobile application that helps users identify their current location within a university campus using image-based recognition. The system uses a trained convolutional neural network (CNN) to classify images of campus buildings and return the predicted location to the user.
-
-The application is designed for new students, visitors, and anyone unfamiliar with the campus layout. It focuses on simplicity: the user takes a photo, and the app predicts which building they are in.
-
----
-
-## Motivation
-
-Navigating a university campus can be difficult, especially when buildings are interconnected or visually similar. Traditional navigation methods such as maps or GPS are often unreliable indoors.
-
-This project addresses this problem by leveraging computer vision to recognize buildings directly from images, providing a more intuitive and user-friendly navigation method.
-
----
-
-## Objective
-
-- Train a machine learning model to classify campus buildings based on images.
-- Integrate the trained model into an iOS mobile application.
-- Enable real-time, on-device inference using the phone camera.
-- Provide users with accurate location predictions based on captured images.
+New students and visitors often struggle to navigate a university campus where buildings look similar or are interconnected. This project addresses that by letting the user take a photo of any building — the app sends it to a trained CNN model and returns the building name and a confidence score in seconds.
 
 ---
 
 ## System Architecture
 
-### High-Level Workflow
+```
+iPhone (Expo app)
+      │  POST /predict  (multipart image)
+      ▼
+FastAPI server  ──►  MobileNetV2 model  ──►  JSON { building, confidence }
+(AWS EC2, Docker)
+```
 
-1. User opens the mobile app
-2. User captures an image using the camera
-3. Image is passed to the trained model
-4. Model predicts the building class
-5. App displays the predicted location
+1. User opens the app and points the camera at a building
+2. App sends the image to the FastAPI backend
+3. Model runs inference and returns the predicted class + confidence
+4. App displays the result with a colour-coded confidence bar
 
 ---
 
-## Technologies Used
+## Technologies
 
-### Mobile Development
+| Layer | Stack |
+|---|---|
+| Mobile app | React Native, Expo Router, NativeWind (Tailwind) |
+| ML model | TensorFlow / Keras — MobileNetV2 transfer learning |
+| Backend | FastAPI, Uvicorn, Pillow |
+| Deployment | Docker, AWS EC2, Elastic IP |
 
-- Swift
-- SwiftUI
-- Core ML
+---
 
-### Machine Learning
+## Model
 
-- TensorFlow
-- Keras
+- Architecture: MobileNetV2 (pretrained on ImageNet, fine-tuned on campus data)
+- Input: 224 × 224 RGB image
+- Classes: Building 2, 3, 4, 5, 7, 8, 9, 10
+- Test accuracy: **94.02%**
 
 ---
 
 ## Dataset
 
-### Data Collection
+Images collected on LTU campus with an iPhone under varying conditions:
 
-- Images are manually collected using an iPhone camera
-- Dataset includes multiple buildings on campus (approximately 6 classes)
-- Each building has multiple images captured under different conditions
-
-### Variations Included
-
-- Different angles and perspectives
-- Lighting conditions (daytime, evening)
-- Presence of people (to improve generalization)
-- Partial occlusions
-
-### Dataset Structure
-
-- Building 3
-- Building 4
-- ...
+- Different angles and distances
+- Daytime and evening lighting
+- Partial occlusions and people in frame
 
 ---
 
-## Model Details
+## Repository Structure
 
-### Approach
-
-- Use transfer learning with a pretrained CNN
-- Fine-tune the model on the custom campus dataset
-
----
-
-## Expected Outcomes
-
-- Functional iOS application capable of predicting user location
-- Trained CNN model optimized for mobile inference
-- Dataset of labeled campus images
-- Evaluation of model accuracy and performance
+```
+backend/        FastAPI server + Dockerfile
+MobileApp/      React Native / Expo app
+notebooks/      Model training and EDA notebooks
+src/            Preprocessing and visualisation utilities
+images/         App screenshots
+```
 
 ---
 
-## Summary
+## Screenshots
 
-This project demonstrates the application of computer vision and mobile machine learning for real-world navigation. It combines modern frameworks and efficient deployment techniques to deliver a practical and user-friendly solution.
+<p align="center">
+  <img src="images/app-landing_page.PNG" width="22%" />
+  <img src="images/app-prediction.PNG"   width="22%" />
+  <img src="images/app-settings.PNG"     width="22%" />
+  <img src="images/app-about.PNG"        width="22%" />
+</p>
+
+---
+
+## Running Locally
+
+See [`backend/`](backend/) for server setup and [`MobileApp/`](MobileApp/) for the app setup.
+
+---
+
+## Take-home Assignment Disclaimer
+
+- **Author Name:** Adam Najajreh (LTU ID: 000813397)
+- **Work Ownership:** This work is my own. It is not a copy from someone: Yes
+- **GenAI Assistance:** Percentage of code generated with AI tools: **50%** (AI assisted with debugging, and generated most of the React Native UI components and styling work)
+- **Understanding:** I understand every part of this code: Yes
+- **Confidence:** I am confident that I can modify, adapt, and extend this code on my own: Yes
