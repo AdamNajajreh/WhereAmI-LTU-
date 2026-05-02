@@ -88,7 +88,7 @@ See [`backend/`](backend/) for server setup and [`MobileApp/`](MobileApp/) for t
 
 ## Take-home Assignment Disclaimer
 
-- **Author Name:** Adam Najajreh (LTU ID: 000813397)
+- **Author Name:** Adam Najajreh
 - **Work Ownership:** This work is my own. It is not a copy from someone: Yes
 - **GenAI Assistance:** Percentage of code generated with AI tools: **50%** (AI assisted with debugging, and generated most of the React Native UI components and styling work)
 - **Understanding:** I understand every part of this code: Yes
