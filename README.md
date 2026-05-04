@@ -29,12 +29,12 @@ FastAPI server  ──►  MobileNetV2 model  ──►  JSON { building, confid
 
 ## Technologies
 
-| Layer | Stack |
-|---|---|
-| Mobile app | React Native, Expo Router, NativeWind (Tailwind) |
-| ML model | TensorFlow / Keras — MobileNetV2 transfer learning |
-| Backend | FastAPI, Uvicorn, Pillow |
-| Deployment | Docker, AWS EC2, Elastic IP |
+| Layer      | Stack                                              |
+| ---------- | -------------------------------------------------- |
+| Mobile app | React Native, Expo Router, NativeWind (Tailwind)   |
+| ML model   | TensorFlow / Keras — MobileNetV2 transfer learning |
+| Backend    | FastAPI, Uvicorn, Pillow                           |
+| Deployment | Docker, AWS EC2, Elastic IP                        |
 
 ---
 
@@ -65,6 +65,7 @@ MobileApp/      React Native / Expo app
 notebooks/      Model training and EDA notebooks
 src/            Preprocessing and visualisation utilities
 images/         App screenshots
+presentation/   Presentation slides
 ```
 
 ---
