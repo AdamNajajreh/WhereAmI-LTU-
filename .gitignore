@@ -1,7 +1,7 @@
 .claude/
 .venv/
 dataset/
-*.pdf
+ANajajreh_Prj1.pdf
 .DS_Store
 *.zip
 __pycache__/
